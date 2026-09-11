@@ -74,30 +74,31 @@ export default function NotificationsPage() {
     <PageWrapper>
       <TopBar title={t('notif.title')} />
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-        <h2 style={{ fontSize: '1.05rem' }}>{t('notif.title')}</h2>
-        <button
-          className="btn btn-secondary"
-          style={{ minHeight: '36px', padding: '0 0.875rem', fontSize: '0.8rem' }}
-          onClick={markAllAsRead}
-          id="btn-mark-all-read"
-        >
-          {t('notif.mark.all')}
-        </button>
-      </div>
+      <div className="page-content">
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+          <button
+            className="btn btn-secondary"
+            style={{ minHeight: '36px', padding: '0 0.875rem', fontSize: '0.8rem' }}
+            onClick={markAllAsRead}
+            id="btn-mark-all-read"
+          >
+            {t('notif.mark.all')}
+          </button>
+        </div>
 
-      {notifications.length === 0 ? (
-        <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
-          <Bell size={40} color="var(--color-muted)" style={{ marginBottom: '1rem' }} />
-          <p style={{ color: 'var(--color-muted)' }}>{t('notif.empty')}</p>
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          {notifications.map((notif) => (
-            <NotifItem key={notif.id} notif={notif} onClick={() => handleClick(notif)} />
-          ))}
-        </div>
-      )}
+        {notifications.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '3rem 1rem' }}>
+            <Bell size={40} color="var(--text-muted)" style={{ marginBottom: '1rem' }} />
+            <p style={{ color: 'var(--text-muted)' }}>{t('notif.empty')}</p>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {notifications.map((notif) => (
+              <NotifItem key={notif.id} notif={notif} onClick={() => handleClick(notif)} />
+            ))}
+          </div>
+        )}
+      </div>
     </PageWrapper>
   );
 }
