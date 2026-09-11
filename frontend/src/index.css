@@ -1,1 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;800&family=Noto+Sans+Devanagari:wght@400;500;700;800&display=swap');
 @import "tailwindcss";
+
+/* ─── Design Tokens ─────────────────────────────────────────────────────────── */
+@theme {
+  /* Colors */
+  --color-primary: #2D6A4F;
+  --color-primary-deep: #1B4332;
+  --color-primary-light: #40916C;
+  --color-accent: #BC6C25;
+  --color-accent-light: #DDA15E;
+  --color-bg: #FEFAE0;
+  --color-surface: #FFFFFF;
+  --color-border: #E8E2D0;
+  --color-muted: #6B7566;
+  --color-success: #40916C;
+  --color-warning: #DDA15E;
+  --color-error: #B91C1C;
+
+  /* Typography */
+  --font-sans: 'Noto Sans', 'Noto Sans Devanagari', system-ui, sans-serif;
+
+  /* Border Radius */
+  --radius-card: 16px;
+  --radius-btn: 12px;
+  --radius-badge: 999px;
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-bg);
+  color: var(--color-primary-deep);
+  line-height: 1.5;
+  min-height: 100dvh;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Typography ─────────────────────────────────────────────────────────────── */
+h1,
+h2,
+h3 {
+  font-weight: 700;
+  color: var(--color-primary-deep);
+  margin: 0;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+}
+
+p {
+  margin: 0;
+}
+
+/* Price numerals get the boldest weight — price is the fact a farmer needs first */
+.price-numeral {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary-deep);
+}
+
+.price-large {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+/* ─── Cards ──────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 1rem;
+  box-shadow: 0 1px 4px rgba(27, 67, 50, 0.06);
+}
+
+.card-best {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 2px var(--color-primary-light), 0 2px 8px rgba(64, 145, 108, 0.15);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 52px;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-btn);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(45, 106, 79, 0.25);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-deep);
+}
+
+.btn-secondary {
+  background: #fff;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+}
+
+.btn-secondary:hover {
+  background: #f0f7f4;
+}
+
+.btn-accent {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.btn-accent:hover {
+  background: #a35a1e;
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: var(--radius-badge);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-best {
+  background: #D1FAE5;
+  color: var(--color-primary);
+}
+
+.badge-verified {
+  background: #E0F2FE;
+  color: #0369A1;
+}
+
+.badge-demo {
+  background: #FEF9C3;
+  color: #854D0E;
+}
+
+.badge-accent {
+  background: #FEF3C7;
+  color: var(--color-accent);
+}
+
+/* ─── Bottom Nav ─────────────────────────────────────────────────────────────── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border-top: 1.5px solid var(--color-border);
+  display: flex;
+  z-index: 50;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 10px 4px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  cursor: pointer;
+  border: none;
+  background: none;
+  text-decoration: none;
+  min-height: 60px;
+  transition: color 0.15s;
+}
+
+.bottom-nav-item.active {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.bottom-nav-item.active .nav-icon {
+  color: var(--color-primary);
+}
+
+/* ─── Top Bar ────────────────────────────────────────────────────────────────── */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--color-surface);
+  border-bottom: 1.5px solid var(--color-border);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* ─── Page Wrapper ───────────────────────────────────────────────────────────── */
+.page-content {
+  flex: 1;
+  padding: 1rem 1rem calc(80px + 1rem);
+  /* bottom nav clearance */
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ─── Recommendation Banner ──────────────────────────────────────────────────── */
+.rec-banner {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-deep) 100%);
+  border-radius: var(--radius-card);
+  padding: 1.5rem;
+  color: #fff;
+}
+
+/* ─── Skeleton Loader ────────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #E8E2D0 25%, #F5F0E0 50%, #E8E2D0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* ─── Utility Helpers ────────────────────────────────────────────────────────── */
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-primary-deep {
+  color: var(--color-primary-deep);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.text-muted {
+  color: var(--color-muted);
+}
+
+.text-success {
+  color: var(--color-success);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-page {
+  background-color: var(--color-bg);
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 1rem 0;
+}
+
+/* ─── Responsive Max Width ───────────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .page-content {
+    padding: 1.5rem 2rem calc(80px + 1.5rem);
+  }
+
+  .bottom-nav {
+    max-width: 600px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 16px 16px 0 0;
+  }
+}
