@@ -6,48 +6,45 @@ interface TopBarProps {
   title: string;
   showBack?: boolean;
   showNotification?: boolean;
+  actions?: React.ReactNode;
 }
 
-export default function TopBar({ title, showBack = true, showNotification = true }: TopBarProps) {
+export default function TopBar({
+  title,
+  showBack = true,
+  showNotification = true,
+  actions,
+}: TopBarProps) {
   const navigate = useNavigate();
   const { unreadCount } = useNotifications();
 
   return (
-    <header className="top-bar">
+    <header className="topbar">
       {showBack && (
         <button
           onClick={() => navigate(-1)}
-          className="btn-icon"
+          className="topbar-icon-btn"
           aria-label="Go back"
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', borderRadius: '8px', color: 'var(--color-primary-deep)', display: 'flex', alignItems: 'center' }}
         >
-          <ArrowLeft size={22} />
+          <ArrowLeft size={18} />
         </button>
       )}
 
-      <h1 style={{ flex: 1, fontSize: '1.1rem', fontWeight: 700, color: 'var(--color-primary-deep)' }}>
-        {title}
-      </h1>
+      <span className="topbar-title">{title}</span>
+
+      {actions}
 
       {showNotification && (
         <button
           onClick={() => navigate('/notifications')}
+          className="topbar-icon-btn"
           aria-label={`Notifications${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
-          style={{ position: 'relative', background: 'none', border: 'none', cursor: 'pointer', padding: '4px', borderRadius: '8px', color: 'var(--color-primary-deep)', display: 'flex', alignItems: 'center' }}
+          style={{ position: 'relative' }}
         >
-          <Bell size={22} />
+          <Bell size={18} />
           {unreadCount > 0 && (
-            <span
-              aria-hidden="true"
-              style={{
-                position: 'absolute', top: -2, right: -2,
-                background: 'var(--color-error)', color: '#fff',
-                borderRadius: '999px', fontSize: '0.65rem', fontWeight: 800,
-                minWidth: '18px', height: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                padding: '0 4px',
-              }}
-            >
-              {unreadCount}
+            <span className="notif-dot" aria-hidden="true">
+              {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
         </button>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Filter } from 'lucide-react';
 import TopBar from '../../components/layout/TopBar';
 import PageWrapper from '../../components/layout/PageWrapper';
 import { SkeletonCard } from '../../components/ui/Skeleton';
@@ -8,83 +9,126 @@ import { MANDI_PRICES } from '../../mockData/data';
 import { fetchMockData } from '../../mockData/api';
 import type { MandiPrice } from '../../types';
 
-const CROP_OPTIONS = ['All', 'tomato', 'onion', 'potato', 'wheat'] as const;
-const CROP_EMOJI: Record<string, string> = { tomato: '🍅', onion: '🧅', potato: '🥔', wheat: '🌾' };
+const CROP_OPTIONS = [
+  { value: 'All',    label: 'All Crops' },
+  { value: 'tomato', label: 'Tomato' },
+  { value: 'onion',  label: 'Onion' },
+  { value: 'potato', label: 'Potato' },
+  { value: 'wheat',  label: 'Wheat' },
+];
 
 export default function PricesPage() {
   const { t } = useApp();
   const [loading, setLoading] = useState(true);
   const [prices, setPrices] = useState<MandiPrice[]>([]);
-  const [filter, setFilter] = useState<string>('All');
+  const [filter, setFilter] = useState('All');
 
   useEffect(() => {
-    fetchMockData(MANDI_PRICES, 1100).then((data) => { setPrices(data); setLoading(false); });
+    fetchMockData(MANDI_PRICES, 1000).then((data) => { setPrices(data); setLoading(false); });
   }, []);
 
   const filtered = filter === 'All' ? prices : prices.filter((p) => p.crop === filter);
 
-  if (loading) return <PageWrapper><TopBar title={t('prices.title')} /><div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}><SkeletonCard lines={3} /><SkeletonCard lines={3} /><SkeletonCard lines={3} /></div></PageWrapper>;
-
   return (
     <PageWrapper>
-      <TopBar title={t('prices.title')} />
+      <TopBar
+        title={t('prices.title')}
+        showBack={false}
+        actions={
+          <span className="badge badge-demo" style={{ marginRight: 8 }}>Demo Data</span>
+        }
+      />
 
-      {/* Demo Badge */}
-      <div style={{ marginBottom: '1rem' }}>
-        <span className="badge badge-demo">🔬 {t('prices.disclaimer')}</span>
-      </div>
+      <div className="page-content">
+        <div className="page-header">
+          <h1 className="page-title">{t('prices.title')}</h1>
+          <p className="page-subtitle">Maharashtra APMC markets · Last updated: Today, 12 Sep 2026</p>
+        </div>
 
-      {/* Filter Tabs */}
-      <div style={{ display: 'flex', gap: '0.5rem', overflowX: 'auto', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
-        {CROP_OPTIONS.map((crop) => (
-          <button
-            key={crop}
-            onClick={() => setFilter(crop)}
-            style={{
-              padding: '6px 14px', borderRadius: '999px', border: `1.5px solid ${filter === crop ? 'var(--color-primary)' : 'var(--color-border)'}`,
-              background: filter === crop ? 'var(--color-primary)' : 'var(--color-surface)',
-              color: filter === crop ? '#fff' : 'var(--color-muted)',
-              fontWeight: 600, fontSize: '0.85rem', cursor: 'pointer', whiteSpace: 'nowrap', fontFamily: 'inherit',
-            }}
-            id={`filter-${crop}`}
-          >
-            {crop === 'All' ? 'All' : `${CROP_EMOJI[crop]} ${t(`crop.${crop}` as Parameters<typeof t>[0])}`}
-          </button>
-        ))}
-      </div>
+        {/* Filter row */}
+        <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
+          <Filter size={14} color="var(--text-muted)" />
+          {CROP_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setFilter(opt.value)}
+              id={`filter-${opt.value}`}
+              style={{
+                padding: '5px 14px',
+                borderRadius: 'var(--radius-sm)',
+                border: `1px solid ${filter === opt.value ? 'var(--primary)' : 'var(--border)'}`,
+                background: filter === opt.value ? 'var(--primary)' : 'var(--surface)',
+                color: filter === opt.value ? '#fff' : 'var(--text-secondary)',
+                fontWeight: 600,
+                fontSize: '0.8rem',
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                transition: 'all 0.12s',
+              }}
+            >
+              {t(`crop.${opt.value.toLowerCase()}` as Parameters<typeof t>[0]) || opt.label}
+            </button>
+          ))}
+        </div>
 
-      {/* Price Cards */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {filtered.map((price, idx) => (
-          <div key={idx} className="card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '1rem' }}>
-                  {CROP_EMOJI[price.crop]} {t(`crop.${price.crop}` as Parameters<typeof t>[0])}
-                </div>
-                <div style={{ fontSize: '0.8rem', color: 'var(--color-muted)' }}>{price.market} · {price.location}</div>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div className="price-numeral" style={{ color: 'var(--color-primary)' }}>₹{price.modalPrice}</div>
-                <div style={{ fontSize: '0.7rem', color: 'var(--color-muted)' }}>Modal</div>
-              </div>
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', fontSize: '0.82rem', textAlign: 'center' }}>
-              <div style={{ background: 'var(--color-bg)', borderRadius: '8px', padding: '6px' }}>
-                <div style={{ color: 'var(--color-muted)', marginBottom: '2px' }}>{t('prices.min')}</div>
-                <div style={{ fontWeight: 700 }}>₹{price.minPrice}</div>
-              </div>
-              <div style={{ background: 'var(--color-bg)', borderRadius: '8px', padding: '6px' }}>
-                <div style={{ color: 'var(--color-muted)', marginBottom: '2px' }}>{t('prices.max')}</div>
-                <div style={{ fontWeight: 700 }}>₹{price.maxPrice}</div>
-              </div>
-              <div style={{ background: 'var(--color-bg)', borderRadius: '8px', padding: '6px' }}>
-                <div style={{ color: 'var(--color-muted)', marginBottom: '2px' }}>{t('prices.arrival')}</div>
-                <div style={{ fontWeight: 700 }}>{price.arrivalQuantity}q</div>
-              </div>
-            </div>
+        {/* Table — desktop */}
+        {loading ? (
+          <div className="stack stack-12">
+            <SkeletonCard lines={2} />
+            <SkeletonCard lines={2} />
+            <SkeletonCard lines={2} />
           </div>
-        ))}
+        ) : (
+          <>
+            {/* Desktop table */}
+            <div className="card" style={{ padding: 0, overflow: 'hidden', display: 'none' }} id="price-table-desktop"
+              style={{ display: 'block' }}
+            >
+              <div style={{ overflowX: 'auto' }}>
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>{t('prices.market')}</th>
+                      <th>Crop</th>
+                      <th style={{ textAlign: 'right' }}>{t('prices.min')} (₹/kg)</th>
+                      <th style={{ textAlign: 'right' }}>{t('prices.modal')} (₹/kg)</th>
+                      <th style={{ textAlign: 'right' }}>{t('prices.max')} (₹/kg)</th>
+                      <th style={{ textAlign: 'right' }}>{t('prices.arrival')} (q)</th>
+                      <th style={{ textAlign: 'right' }}>Distance</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((row, i) => (
+                      <tr key={i}>
+                        <td>
+                          <div style={{ fontWeight: 600 }}>{row.market}</div>
+                          <div style={{ fontSize: '0.775rem', color: 'var(--text-muted)' }}>{row.location}</div>
+                        </td>
+                        <td>
+                          <span style={{ fontWeight: 500 }}>
+                            {t(`crop.${row.crop}` as Parameters<typeof t>[0])}
+                          </span>
+                        </td>
+                        <td style={{ textAlign: 'right', color: 'var(--text-muted)' }}>₹{row.minPrice}</td>
+                        <td style={{ textAlign: 'right' }}>
+                          <span style={{ fontWeight: 700, color: 'var(--primary)', fontSize: '1rem' }}>₹{row.modalPrice}</span>
+                        </td>
+                        <td style={{ textAlign: 'right', color: 'var(--text-muted)' }}>₹{row.maxPrice}</td>
+                        <td style={{ textAlign: 'right' }}>{row.arrivalQuantity}</td>
+                        <td style={{ textAlign: 'right', color: 'var(--text-muted)', fontSize: '0.8rem' }}>{row.distanceKm} km</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Disclaimer */}
+            <p style={{ marginTop: 12, fontSize: '0.775rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+              {t('prices.disclaimer')}
+            </p>
+          </>
+        )}
       </div>
     </PageWrapper>
   );

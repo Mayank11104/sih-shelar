@@ -1,6 +1,6 @@
-import { AppProvider } from '../store/AppContext';
-import { NotificationProvider } from '../store/NotificationContext';
-import AppRouter from './Router';
+import { AppProvider } from './store/AppContext';
+import { NotificationProvider } from './store/NotificationContext';
+import AppRouter from './app/Router';
 
 export default function App() {
   return (
