@@ -3,118 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import {
   TrendingUp, TrendingDown, Minus, ShoppingBasket,
   BarChart2, Users, ClipboardList, MapPin, ArrowRight,
-  Leaf, Wheat,
 } from 'lucide-react';
 import PageWrapper from '../../components/layout/PageWrapper';
 import TopBar from '../../components/layout/TopBar';
 import { useApp } from '../../store/AppContext';
-import { useNotifications } from '../../store/NotificationContext';
 import { HOME_SNAPSHOT } from '../../mockData/data';
 
-/* ─── Splash Loader ──────────────────────────────────────────────────────────── */
-function SplashLoader({ onDone }: { onDone: () => void }) {
-  const [progress, setProgress] = useState(0);
-  const [phase, setPhase] = useState<'loading' | 'done'>('loading');
-
-  useEffect(() => {
-    const steps = 28;
-    const interval = 50;
-    let step = 0;
-    const timer = setInterval(() => {
-      step++;
-      const pct = Math.round((1 - Math.cos((step / steps) * Math.PI)) / 2 * 100);
-      setProgress(Math.min(pct, 100));
-      if (step >= steps) {
-        clearInterval(timer);
-        setPhase('done');
-        setTimeout(onDone, 380);
-      }
-    }, interval);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div
-      style={{
-        position: 'fixed', inset: 0, zIndex: 999,
-        background: 'var(--primary-dark)',
-        display: 'flex', flexDirection: 'column',
-        alignItems: 'center', justifyContent: 'center',
-        opacity: phase === 'done' ? 0 : 1,
-        transition: 'opacity 0.38s ease',
-        pointerEvents: phase === 'done' ? 'none' : 'all',
-      }}
-    >
-      {/* Background leaf pattern */}
-      <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', opacity: 0.06 }}>
-        {[...Array(6)].map((_, i) => (
-          <Leaf
-            key={i}
-            size={120}
-            color="#fff"
-            style={{
-              position: 'absolute',
-              top: `${[10, 60, 30, 75, 5, 50][i]}%`,
-              left: `${[5, 70, 40, 15, 80, 55][i]}%`,
-              transform: `rotate(${[20, -30, 45, -15, 60, -45][i]}deg)`,
-              animation: `leafFloat ${[4, 5, 3.5, 4.5, 3, 5.5][i]}s ease-in-out infinite alternate`,
-              animationDelay: `${i * 0.4}s`,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Logo mark */}
-      <div
-        style={{
-          width: 64, height: 64, borderRadius: 16,
-          background: 'var(--primary-light)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          marginBottom: 20,
-          animation: 'splashPulse 1.6s ease-in-out infinite',
-        }}
-      >
-        <Wheat size={32} color="#fff" />
-      </div>
-
-      {/* Brand name with gradient */}
-      <h1
-        style={{
-          fontSize: 'clamp(2rem, 5vw, 3rem)',
-          fontWeight: 800,
-          letterSpacing: '-0.02em',
-          marginBottom: 8,
-          background: 'linear-gradient(135deg, #ffffff 0%, #A8D5B5 50%, #DDA15E 100%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          animation: 'brandReveal 0.8s cubic-bezier(0.22,1,0.36,1) forwards',
-        }}
-      >
-        Agriverse
-      </h1>
-
-      <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.85rem', marginBottom: 40, letterSpacing: '0.12em', textTransform: 'uppercase', fontWeight: 600 }}>
-        Market Linkage &amp; Price Discovery
-      </p>
-
-      {/* Progress bar */}
-      <div style={{ width: 200, height: 3, background: 'rgba(255,255,255,0.12)', borderRadius: 999 }}>
-        <div
-          style={{
-            height: '100%', borderRadius: 999,
-            background: 'linear-gradient(90deg, var(--primary-light), var(--accent-light))',
-            width: `${progress}%`,
-            transition: 'width 0.05s linear',
-          }}
-        />
-      </div>
-      <p style={{ marginTop: 12, fontSize: '0.72rem', color: 'rgba(255,255,255,0.3)', fontWeight: 500 }}>
-        {progress < 100 ? 'Loading market data…' : 'Ready'}
-      </p>
-    </div>
-  );
-}
 
 /* ─── Animated Section ───────────────────────────────────────────────────────── */
 function AnimatedSection({ children, delay = 0, style = {} }: {
@@ -181,18 +75,12 @@ export default function HomePage() {
   const { t, state } = useApp();
   const navigate = useNavigate();
 
-  const [splashDone, setSplashDone] = useState(() => sessionStorage.getItem('agriverse_splash') === '1');
   const [countersStarted, setCountersStarted] = useState(false);
 
-  const handleSplashDone = () => {
-    sessionStorage.setItem('agriverse_splash', '1');
-    setSplashDone(true);
-    setTimeout(() => setCountersStarted(true), 400);
-  };
-
   useEffect(() => {
-    if (splashDone) setTimeout(() => setCountersStarted(true), 200);
-  }, [splashDone]);
+    const t = setTimeout(() => setCountersStarted(true), 300);
+    return () => clearTimeout(t);
+  }, []);
 
   const quickActions = [
     { label: t('home.cta.markets'),   Icon: BarChart2,    route: '/prices'       },
@@ -201,10 +89,7 @@ export default function HomePage() {
   ];
 
   return (
-    <>
-      {!splashDone && <SplashLoader onDone={handleSplashDone} />}
-
-      <PageWrapper>
+    <PageWrapper>
         <TopBar title="Dashboard" showBack={false} />
         <div className="page-content">
 
@@ -328,6 +213,5 @@ export default function HomePage() {
 
         </div>
       </PageWrapper>
-    </>
   );
 }
