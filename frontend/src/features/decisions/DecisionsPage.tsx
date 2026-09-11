@@ -1,4 +1,3 @@
-import { CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import TopBar from '../../components/layout/TopBar';
 import PageWrapper from '../../components/layout/PageWrapper';
@@ -7,7 +6,6 @@ import { BUYERS } from '../../mockData/data';
 import { formatCurrency } from '../../utils/decisionEngine';
 
 const TIMING_EMOJI: Record<string, string> = { now: '⚡', wait: '⏳', store: '🏭' };
-const OPTION_LABEL: Record<string, string> = { trader: 'My Regular Trader', mandi: 'Nearby Mandi', fpo: 'FPO', buyer: 'Verified Buyer' };
 
 export default function DecisionsPage() {
   const { t, state, confirmDecision, resetDecision } = useApp();

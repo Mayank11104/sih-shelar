@@ -31,7 +31,7 @@ function SplashLoader({ onDone }: { onDone: () => void }) {
       }
     }, INTERVAL_MS);
     return () => clearInterval(timer);
-  }, []);
+  }, [onDone]);
 
   return (
     <div

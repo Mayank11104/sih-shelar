@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
@@ -18,14 +18,17 @@ export default function PredictionPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true); setError(false);
     fetchMockData(null, 1200)
       .then(() => setLoading(false))
       .catch(() => { setError(true); setLoading(false); });
-  };
+  }, []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
 
   if (loading) return <PageWrapper><TopBar title={t('predict.title')} /><div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}><SkeletonCard lines={2} /><div className="skeleton" style={{ height: 220 }} /><SkeletonCard lines={3} /></div></PageWrapper>;
   if (error)   return <PageWrapper><TopBar title={t('predict.title')} /><ErrorState onRetry={load} /></PageWrapper>;

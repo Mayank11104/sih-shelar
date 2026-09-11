@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, MapPin, Star, ArrowRight, Info } from 'lucide-react';
 import TopBar from '../../components/layout/TopBar';
@@ -102,7 +102,7 @@ export default function SellingOptionsPage() {
   const [error, setError] = useState(false);
   const [options, setOptions] = useState<SellingOption[]>([]);
 
-  const load = () => {
+  const load = useCallback(() => {
     setLoading(true); setError(false);
     const produce = state.produce;
     if (!produce) { navigate('/sell'); return; }
@@ -113,9 +113,12 @@ export default function SellingOptionsPage() {
         setLoading(false);
       })
       .catch(() => { setError(true); setLoading(false); });
-  };
+  }, [navigate, state.produce, state.trader]);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    load();
+  }, [load]);
 
   if (loading) return (
     <PageWrapper>

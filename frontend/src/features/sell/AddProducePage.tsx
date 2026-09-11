@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import TopBar from '../../components/layout/TopBar';
 import PageWrapper from '../../components/layout/PageWrapper';
 import { SkeletonCard } from '../../components/ui/Skeleton';
-import ErrorState from '../../components/ui/ErrorState';
 import { useApp } from '../../store/AppContext';
 import { CROPS, DEMO_TRADER } from '../../mockData/data';
 import { fetchMockData } from '../../mockData/api';
-import type { Crop, QualityGrade, ProduceInput } from '../../types';
+import type { Crop, QualityGrade } from '../../types';
 
 const QUALITY_DESCRIPTIONS: Record<QualityGrade, string> = {
   A: 'Premium quality — uniform size, no defects',
@@ -30,7 +29,7 @@ export default function AddProducePage() {
   useEffect(() => {
     if (!state.trader) setTrader(DEMO_TRADER);
     fetchMockData(CROPS).then((data) => { setCrops(data); setLoading(false); });
-  }, []);
+  }, [state.trader, setTrader]);
 
   const handleSubmit = () => {
     if (!selectedCrop || !quantity) return;

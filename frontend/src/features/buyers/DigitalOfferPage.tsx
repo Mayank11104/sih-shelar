@@ -10,6 +10,13 @@ import { fetchMockData } from '../../mockData/api';
 import { calcNetReturn, formatCurrency } from '../../utils/decisionEngine';
 import type { Buyer } from '../../types';
 
+const DetailRow = ({ label, value, bold = false }: { label: string; value: string; bold?: boolean }) => (
+  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.625rem 0', borderBottom: '1px solid var(--border)' }}>
+    <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>{label}</span>
+    <span style={{ fontWeight: bold ? 800 : 600, fontSize: bold ? '1.1rem' : '0.9rem', color: bold ? 'var(--primary)' : 'var(--text)' }}>{value}</span>
+  </div>
+);
+
 export default function DigitalOfferPage() {
   const { t, state } = useApp();
   const navigate = useNavigate();
@@ -56,14 +63,6 @@ export default function DigitalOfferPage() {
       </PageWrapper>
     );
   }
-
-  const DetailRow = ({ label, value, bold = false }: { label: string; value: string; bold?: boolean }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.625rem 0', borderBottom: '1px solid var(--color-border)' }}>
-      <span style={{ fontSize: '0.9rem', color: 'var(--color-muted)' }}>{label}</span>
-      <span style={{ fontWeight: bold ? 800 : 600, fontSize: bold ? '1.1rem' : '0.9rem', color: bold ? 'var(--color-primary)' : 'var(--color-primary-deep)' }}>{value}</span>
-    </div>
-  );
-
   return (
     <PageWrapper>
       <TopBar title={t('offer.title')} />

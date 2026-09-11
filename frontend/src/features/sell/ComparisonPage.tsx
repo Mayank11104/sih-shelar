@@ -4,9 +4,18 @@ import TopBar from '../../components/layout/TopBar';
 import PageWrapper from '../../components/layout/PageWrapper';
 import { SkeletonCard } from '../../components/ui/Skeleton';
 import { useApp } from '../../store/AppContext';
-import { DEMO_MANDI, BUYERS } from '../../mockData/data';
+import { BUYERS } from '../../mockData/data';
 import { fetchMockData } from '../../mockData/api';
 import { calcNetReturn, formatCurrency } from '../../utils/decisionEngine';
+
+const BreakdownRow = ({ label, value, isNegative = false }: { label: string; value: number; isNegative?: boolean }) => (
+  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid var(--border)', fontSize: '0.9rem' }}>
+    <span style={{ color: 'var(--text-muted)' }}>{label}</span>
+    <span style={{ fontWeight: 600, color: isNegative ? 'var(--error)' : 'var(--primary)' }}>
+      {isNegative ? '−' : ''}{formatCurrency(Math.abs(value))}
+    </span>
+  </div>
+);
 
 export default function ComparisonPage() {
   const { t, state } = useApp();
@@ -28,16 +37,6 @@ export default function ComparisonPage() {
   const buyerBreak  = calcNetReturn({ pricePerKg: BUYERS[0].offerPrice, quantityKg: qty, transportCost: BUYERS[0].transportCost, otherCosts: BUYERS[0].otherCosts });
 
   const diff = buyerBreak.netReturn - traderBreak.netReturn;
-  const traderIsBetter = diff <= 0;
-
-  const BreakdownRow = ({ label, value, isNegative = false }: { label: string; value: number; isNegative?: boolean }) => (
-    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.4rem 0', borderBottom: '1px solid var(--color-border)', fontSize: '0.9rem' }}>
-      <span style={{ color: 'var(--color-muted)' }}>{label}</span>
-      <span style={{ fontWeight: 600, color: isNegative ? 'var(--color-error)' : 'var(--color-primary-deep)' }}>
-        {isNegative ? '−' : ''}{formatCurrency(Math.abs(value))}
-      </span>
-    </div>
-  );
 
   return (
     <PageWrapper>

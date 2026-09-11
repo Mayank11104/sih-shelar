@@ -5,6 +5,20 @@ import TopBar from '../../components/layout/TopBar';
 import PageWrapper from '../../components/layout/PageWrapper';
 import { useApp } from '../../store/AppContext';
 import type { Trader } from '../../types';
+const InputField = ({ label, value, onChange, placeholder, type = 'text' }: {
+  label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string;
+}) => (
+  <div style={{ marginBottom: '0.875rem' }}>
+    <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.4rem', fontSize: '0.9rem', color: 'var(--color-primary-deep)' }}>{label}</label>
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      placeholder={placeholder}
+      style={{ width: '100%', padding: '0.75rem', border: '1.5px solid var(--color-border)', borderRadius: '10px', fontSize: '1rem', fontFamily: 'inherit', color: 'var(--color-primary-deep)', background: 'var(--color-bg)', boxSizing: 'border-box' }}
+    />
+  </div>
+);
 
 export default function AddTraderPage() {
   const { t, state, setTrader } = useApp();
@@ -34,21 +48,6 @@ export default function AddTraderPage() {
     setSaved(true);
     setTimeout(() => navigate('/profile'), 1200);
   };
-
-  const InputField = ({ label, value, onChange, placeholder, type = 'text' }: {
-    label: string; value: string; onChange: (v: string) => void; placeholder?: string; type?: string;
-  }) => (
-    <div style={{ marginBottom: '0.875rem' }}>
-      <label style={{ display: 'block', fontWeight: 700, marginBottom: '0.4rem', fontSize: '0.9rem', color: 'var(--color-primary-deep)' }}>{label}</label>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        style={{ width: '100%', padding: '0.75rem', border: '1.5px solid var(--color-border)', borderRadius: '10px', fontSize: '1rem', fontFamily: 'inherit', color: 'var(--color-primary-deep)', background: 'var(--color-bg)', boxSizing: 'border-box' }}
-      />
-    </div>
-  );
 
   if (saved) {
     return (

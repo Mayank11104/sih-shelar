@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapPin, CheckCircle2, Star, ArrowRight, Package } from 'lucide-react';
+import { MapPin, CheckCircle2, Star, ArrowRight } from 'lucide-react';
 import TopBar from '../../components/layout/TopBar';
 import PageWrapper from '../../components/layout/PageWrapper';
 import { SkeletonCard } from '../../components/ui/Skeleton';

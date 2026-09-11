@@ -5,7 +5,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
 import { useNotifications } from '../../store/NotificationContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const NAV_ITEMS = [
   { to: '/home',         Icon: Home,           labelKey: 'nav.home'    as const },
@@ -19,7 +19,6 @@ const NAV_ITEMS = [
 export function Sidebar() {
   const { t } = useApp();
   const { unreadCount } = useNotifications();
-  const navigate = useNavigate();
 
   return (
     <aside className="sidebar" role="navigation" aria-label="Main navigation">
